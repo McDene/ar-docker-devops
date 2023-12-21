@@ -10,6 +10,8 @@ resources:
 
 variables:
   # Container registry service connection established during pipeline creation
+  azureSubscription: 'Azure subscription 1(bd1362e2-741e-4f01-8f60-4c5da27f2533)'
+  appName: 'ar-docker-devops'
   dockerRegistryServiceConnection: '2a13cfa9-fd2a-476f-9117-26f000c1b870'
   imageRepository: 'mcdeneardockerdevops'
   containerRegistry: 'maximedenervaud.azurecr.io'
@@ -37,3 +39,10 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
+    
+    - task : AzureWebAppContainer@1
+      displayName: 'Azure Web App on Container Deploy'
+      inputs:
+        azureSubscription : $(azureSubscription)
+        appName: $(appName)
+        containers: $(containerRegistry)/$(imageRepository):$(tag)
